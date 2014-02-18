@@ -73,6 +73,11 @@ module ActionView
       def number_to_currency(number, options = {})
         options.symbolize_keys!
 
+        options[:delimiter] = ERB::Util.html_escape(options[:delimiter]) if options[:delimiter]
+        options[:separator] = ERB::Util.html_escape(options[:separator]) if options[:separator]
+        options[:format] = ERB::Util.html_escape(options[:format]) if options[:format]
+        options[:negative_format] = ERB::Util.html_escape(options[:negative_format]) if options[:negative_format]
+
         defaults  = I18n.translate(:'number.format', :locale => options[:locale], :raise => true) rescue {}
         currency  = I18n.translate(:'number.currency.format', :locale => options[:locale], :raise => true) rescue {}
         defaults  = defaults.merge(currency)
@@ -110,6 +115,9 @@ module ActionView
       #  number_to_percentage(302.24398923423, :precision => 5)           # => 302.24399%
       def number_to_percentage(number, options = {})
         options.symbolize_keys!
+
+        options[:delimiter] = ERB::Util.html_escape(options[:delimiter]) if options[:delimiter]
+        options[:separator] = ERB::Util.html_escape(options[:separator]) if options[:separator]
 
         defaults   = I18n.translate(:'number.format', :locale => options[:locale], :raise => true) rescue {}
         percentage = I18n.translate(:'number.percentage.format', :locale => options[:locale], :raise => true) rescue {}
@@ -152,6 +160,9 @@ module ActionView
       def number_with_delimiter(number, *args)
         options = args.extract_options!
         options.symbolize_keys!
+
+        options[:delimiter] = ERB::Util.html_escape(options[:delimiter]) if options[:delimiter]
+        options[:separator] = ERB::Util.html_escape(options[:separator]) if options[:separator]
 
         defaults = I18n.translate(:'number.format', :locale => options[:locale], :raise => true) rescue {}
 
