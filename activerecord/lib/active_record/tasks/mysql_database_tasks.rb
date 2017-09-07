@@ -58,6 +58,8 @@ module ActiveRecord
         args = prepare_command_options('mysqldump')
         args.concat(["--result-file", "#{filename}"])
         args.concat(["--no-data"])
+        args.concat(["--routines"])
+        args.concat(["--skip-comments"])
         args.concat(["#{configuration['database']}"])
         unless Kernel.system(*args)
           $stderr.puts "Could not dump the database structure. "\

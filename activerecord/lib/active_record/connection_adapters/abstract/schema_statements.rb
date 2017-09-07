@@ -643,6 +643,10 @@ module ActiveRecord
       alias :remove_belongs_to :remove_reference
 
       def dump_schema_information #:nodoc:
+        versions = ActiveRecord::SchemaMigration.get_all_versions
+
+        insert_versions_sql(versions) if versions.any?
+
         sm_table = ActiveRecord::Migrator.schema_migrations_table_name
 
         ActiveRecord::SchemaMigration.order('version').map { |sm|
@@ -851,6 +855,18 @@ module ActiveRecord
 
       def create_alter_table(name)
         AlterTable.new create_table_definition(name, false, {})
+      end
+      def insert_versions_sql(versions)
+        sm_table = ActiveRecord::Migrator.schema_migrations_table_name
+
+        if versions.is_a?(Array)
+          sql = "INSERT INTO #{sm_table} (version) VALUES\n".dup
+          sql << versions.map { |v| "(#{quote(v)})" }.join(",\n")
+          sql << ";\n\n"
+          sql
+        else
+          "INSERT INTO #{sm_table} (version) VALUES (#{quote(versions)});"
+        end
       end
     end
   end
